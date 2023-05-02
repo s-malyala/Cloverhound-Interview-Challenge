@@ -1,7 +1,7 @@
 # Cloverhound Junior Developer Interview Challenge
 
 ## Overview
-In this repo is a single `index.html` file with everything you will need.
+In this repo is a single [`index.html`](./index.html) file with everything you will need.
 
 Your goal is to make a funcitonal web page using React to hit the provided API endpoint and display the result.
 
