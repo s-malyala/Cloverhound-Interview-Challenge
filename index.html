@@ -2,20 +2,89 @@
 <html>
   <head>
     <title>React Test</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src='https://unpkg.com/babel-standalone@6.26.0/babel.js'></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
     <script type="text/babel">
       const { useState } = React;
-      const App = () => {
-        return (<div>Implement me!</div>);
-      }
 
-      ReactDOM.render(<App />, document.querySelector('#root'));
+      const AgeDisplay = ({ age }) => {
+        if (age === null) {
+          return <div>Could not predict age.</div>;
+        } else if (age !== undefined) {
+          return <div>Predicted Age: {age}</div>;
+        }
+        return null;
+      };
+
+      const NameForm = ({ onNameSubmit }) => {
+        const [name, setName] = useState("");
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          onNameSubmit(name);
+        };
+
+        return (
+          <form onSubmit={handleSubmit}>
+            <label>
+              Enter your name:
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Name"
+              />
+            </label>
+            <button type="submit">Submit</button>
+          </form>
+        );
+      };
+
+      const App = () => {
+        const [age, setAge] = useState(undefined);
+        const [cache, setCache] = useState({});
+
+        const handleNameSubmit = (name) => {
+          if (cache[name] !== undefined) {
+            setAge(cache[name]);
+          } else {
+            $.get(`https://api.agify.io/?name=${name}`, function (data) {
+              const receivedAge = data.age;
+              setAge(receivedAge);
+              const newCache = { ...cache, [name]: receivedAge };
+              setCache(newCache);
+            }).fail(function () {
+              console.error("Error fetching data from Agify.io");
+              setAge(null);
+            });
+          }
+        };
+
+        return (
+          <div style={{ textAlign: "center" }}>
+            <h1>Name to Age Predictor Form</h1>
+            <NameForm onNameSubmit={handleNameSubmit} />
+            <AgeDisplay age={age} />
+          </div>
+        );
+      };
+
+      ReactDOM.render(<App />, document.querySelector("#root"));
     </script>
   </body>
 </html>

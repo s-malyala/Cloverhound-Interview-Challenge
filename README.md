@@ -1,16 +1,25 @@
-# Cloverhound Software Developer Interview Challenge
+# Age Prediction App
 
-## Overview
-In this repo is a single [`index.html`](./index.html) file with everything you will need.
+This web application predicts a person's age based on their name using the Agify.io API.
 
-Your goal is to make a working web page using React to hit the provided API endpoint and display the result.
+## Components
 
-Please copy this file into a new repo and complete the following tasks.
+### NameForm
 
-## Tasks
-- Using at least two function components (not including the one provided), create a form with React that will allow a user to enter their name and click a button to submit the form.
-- When the form is submitted, use jQuery to make a network request to Agify.io (find the URL structure [here](https://agify.io/documentation#basic-usage)) with the name the user entered.
-- Parse the response from the endpoint and display the predicted age of the user.
-- Keep track of the predicted ages for each name so you only have to make a request once for each name.
-- Make commits however you'd like, but the final version should be on a branch named `final`
-- Please reply with a link to your public repo when you are finished.
+- Handles user input via a form with a text field and a submit button.
+- Calls the parent `App` component function with the entered name upon form submission.
+
+### AgeDisplay
+
+- Receives an `age` as a prop and displays the predicted age or a message if the age cannot be predicted.
+
+## API Interaction
+
+- Uses jQuery’s `$.get()` to fetch ages from Agify.io.
+- Responses are managed to display the age or a failure message.
+- Successfully retrieved ages are cached to minimize redundant API calls.
+
+## Caching
+
+- Caches ages in the `App` component to avoid repeated API requests for the same names.
+- Checks cache before making new requests, using cached data if available.
